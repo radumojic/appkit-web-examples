@@ -1,5 +1,5 @@
 import UniversalProvider from "@walletconnect/universal-provider";
-import { useDisconnect, useAppKitAccount } from "@reown/appkit/react";
+import { useAppKitAccount } from "@reown/appkit/react";
 
 import { optionalNamespaces } from "../config/projectConfig";
 
@@ -25,7 +25,6 @@ export const ActionButtonList = ({
   setSession,
 }: ActionButtonListProps) => {
   const { signMessageAsync } = useSignMessage();
-  const { disconnect } = useDisconnect();
   const { address } = useAppKitAccount(); // AppKit hook to get the address and check if the user is connected
 
   const handleDisconnect = async () => {
