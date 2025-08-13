@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@multiversx/sdk-core": "^15.0.0",
+    "@mysten/sui": "^1.37.2",
     "@reown/appkit": "1.7.17",
     "@reown/appkit-adapter-solana": "1.7.17",
     "@reown/appkit-adapter-wagmi": "1.7.17",

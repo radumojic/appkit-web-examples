@@ -1,42 +1,59 @@
-import { createAppKit } from "@reown/appkit/react";
-
+import { useState, useEffect } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import UniversalProvider from "@walletconnect/universal-provider";
 import { WagmiProvider } from "wagmi";
 
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ActionButtonList } from "./components/ActionButtonList";
-import { InfoList } from "./components/InfoList";
-import {
-  projectId,
-  metadata,
-  networks,
-  wagmiAdapter,
-  solanaWeb3JsAdapter,
-} from "./config";
+
+import { initializeModal, initializeProvider, wagmiAdapter } from "./config";
 
 import "./App.css";
 
 const queryClient = new QueryClient();
 
-const generalConfig = {
-  projectId,
-  metadata,
-  networks,
-  themeMode: "light" as const,
-  features: {
-    analytics: false, // Optional - defaults to your Cloud configuration
-  },
-  themeVariables: {
-    "--w3m-accent": "#000000",
-  },
-};
-
-// Create modal
-createAppKit({
-  adapters: [wagmiAdapter, solanaWeb3JsAdapter],
-  ...generalConfig,
-});
-
 export function App() {
+  const [provider, setProvider] = useState<UniversalProvider>();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [session, setSession] = useState<any>();
+  useEffect(() => {
+    const init = async () => {
+      const dataProvider = await initializeProvider();
+      setProvider(dataProvider);
+      console.log("dataProvider", dataProvider);
+      initializeModal(dataProvider);
+
+      if (dataProvider.session) {
+        // check if there is a session
+        console.log("dataProvider.session", dataProvider.session);
+        setSession(dataProvider.session);
+      }
+    };
+    init();
+  }, []);
+
+  useEffect(() => {
+    const handleDisplayUri = (uri: string) => {
+      const modal = initializeModal(provider);
+      modal?.open({ uri, view: "ConnectingWalletConnectBasic" });
+    };
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const handleConnect = async (session: any) => {
+      console.log("session", session);
+      setSession(session.session);
+      const modal = initializeModal(provider);
+      await modal?.close();
+    };
+
+    provider?.on("display_uri", handleDisplayUri);
+    provider?.on("connect", handleConnect);
+
+    return () => {
+      provider?.removeListener("connect", handleConnect);
+      provider?.removeListener("display_uri", handleDisplayUri);
+    };
+  }, [provider]);
+
   return (
     <div className={"pages"}>
       <img
@@ -47,8 +64,11 @@ export function App() {
       <h1>AppKit Wagmi+solana React dApp Example</h1>
       <WagmiProvider config={wagmiAdapter.wagmiConfig}>
         <QueryClientProvider client={queryClient}>
-          <appkit-button />
-          <ActionButtonList />
+          <ActionButtonList
+            setSession={setSession}
+            session={session}
+            provider={provider}
+          />
           <div className="advice">
             <p>
               This projectId only works on localhost. <br />
@@ -64,7 +84,7 @@ export function App() {
               to get your own.
             </p>
           </div>
-          <InfoList />
+          {/* <InfoList /> */}
         </QueryClientProvider>
       </WagmiProvider>
     </div>

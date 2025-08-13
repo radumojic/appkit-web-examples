@@ -1,41 +1,12 @@
+import { createAppKit, AppKit } from "@reown/appkit/react";
+import UniversalProvider from "@walletconnect/universal-provider";
+
+import { projectId, metadata, networks } from "./projectConfig";
 import { WagmiAdapter } from "@reown/appkit-adapter-wagmi";
-import {
-  mainnet,
-  arbitrum,
-  solana,
-  solanaDevnet,
-  solanaTestnet,
-} from "@reown/appkit/networks";
-import type { AppKitNetwork } from "@reown/appkit/networks";
 import { SolanaAdapter } from "@reown/appkit-adapter-solana/react";
-import { suiNetworks } from "./suiConfig";
-import { mvxNetworks } from "./mvxConfig";
 
-// Get projectId from https://cloud.reown.com
-export const projectId =
-  import.meta.env.VITE_PROJECT_ID || "b56e18d47c72ab683b10814fe9495694"; // this is a public projectId only to use on localhost
-
-if (!projectId) {
-  throw new Error("Project ID is not defined");
-}
-
-export const metadata = {
-  name: "AppKit",
-  description: "AppKit Example",
-  url: "https://reown.com", // origin must match your domain & subdomain
-  icons: ["https://avatars.githubusercontent.com/u/179229932"],
-};
-
-// for custom networks visit -> https://docs.reown.com/appkit/react/core/custom-networks
-export const networks = [
-  mainnet,
-  arbitrum,
-  solana,
-  solanaDevnet,
-  solanaTestnet,
-  ...suiNetworks,
-  ...mvxNetworks,
-] as [AppKitNetwork, ...AppKitNetwork[]];
+let provider: UniversalProvider | undefined;
+let modal: AppKit | undefined;
 
 //Set up the Wagmi Adapter (Config)
 export const wagmiAdapter = new WagmiAdapter({
@@ -47,3 +18,31 @@ export const wagmiAdapter = new WagmiAdapter({
 export const solanaWeb3JsAdapter = new SolanaAdapter();
 
 export const config = wagmiAdapter.wagmiConfig;
+
+export async function initializeProvider() {
+  if (!provider) {
+    provider = await UniversalProvider.init({
+      projectId,
+      metadata,
+    });
+  }
+  return provider;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function initializeModal(universalProvider?: any) {
+  if (!modal && universalProvider) {
+    modal = createAppKit({
+      projectId,
+      metadata,
+      networks,
+      adapters: [wagmiAdapter, solanaWeb3JsAdapter],
+      universalProvider,
+      manualWCControl: false,
+      features: {
+        analytics: false, // Optional - defaults to your Cloud configuration
+      },
+    });
+  }
+  return modal;
+}
