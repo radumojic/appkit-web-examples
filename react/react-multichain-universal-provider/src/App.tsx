@@ -23,7 +23,7 @@ const generalConfig = {
   networks,
   themeMode: "light" as const,
   features: {
-    analytics: true, // Optional - defaults to your Cloud configuration
+    analytics: false, // Optional - defaults to your Cloud configuration
   },
   themeVariables: {
     "--w3m-accent": "#000000",
@@ -44,10 +44,7 @@ export function App() {
         alt="Reown"
         style={{ width: "150px", height: "150px" }}
       />
-      <h1>
-        AppKit Wagmi+solana+UniversalProvider (MultiversX & SUI) React dApp
-        Example
-      </h1>
+      <h1>AppKit Wagmi+solana React dApp Example</h1>
       <WagmiProvider config={wagmiAdapter.wagmiConfig}>
         <QueryClientProvider client={queryClient}>
           <appkit-button />
