@@ -3,10 +3,14 @@ import {
   bitcoinTestnet,
   mainnet,
   sepolia,
+  solana,
+  solanaTestnet,
+  solanaDevnet,
 } from "@reown/appkit/networks";
 import type { AppKitNetwork } from "@reown/appkit/networks";
 import { BitcoinAdapter } from "@reown/appkit-adapter-bitcoin";
 import { WagmiAdapter } from "@reown/appkit-adapter-wagmi";
+import { SolanaAdapter } from "@reown/appkit-adapter-solana";
 
 // Get projectId from https://cloud.reown.com
 export const projectId =
@@ -26,10 +30,13 @@ export const evmNetworks: [AppKitNetwork, ...AppKitNetwork[]] = [
   sepolia,
 ];
 
-export const networks = [
-  ...bitcoinNetworks,
-  ...evmNetworks,
+export const solanaNetworks: [AppKitNetwork, ...AppKitNetwork[]] = [
+  solana,
+  solanaTestnet,
+  solanaDevnet,
 ];
+
+export const networks = [...bitcoinNetworks, ...evmNetworks, ...solanaNetworks];
 
 // Set up Bitcoin Adapter
 export const bitcoinAdapter = new BitcoinAdapter({
@@ -42,3 +49,5 @@ export const wagmiAdapter = new WagmiAdapter({
   networks: evmNetworks,
   ssr: true,
 });
+
+export const solanaWeb3JsAdapter = new SolanaAdapter();

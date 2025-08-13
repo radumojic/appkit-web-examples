@@ -4,8 +4,10 @@ import {
   bitcoinAdapter,
   bitcoinNetworks,
   evmNetworks,
+  solanaNetworks,
   projectId,
   wagmiAdapter,
+  solanaWeb3JsAdapter,
 } from "@/config";
 import { createAppKit } from "@reown/appkit/react";
 import React, { useState, type ReactNode } from "react";
@@ -13,6 +15,7 @@ import type { AppKitNetwork } from "@reown/appkit/networks";
 import { DefaultSIWX } from "@reown/appkit-siwx";
 import { EIP155Verifier } from "@/verifiers/EIP155Verifier";
 import { BIP122Verifier } from "@/verifiers/BIP20Verifier";
+import { SolanaVerifier } from "@/verifiers/SolanaVerifier";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { WagmiProvider } from "wagmi";
 
@@ -32,11 +35,12 @@ const metadata = {
 const allNetworks: [AppKitNetwork, ...AppKitNetwork[]] = [
   ...evmNetworks,
   ...bitcoinNetworks,
+  ...solanaNetworks,
 ];
 
 // Create the modal
 export const modal = createAppKit({
-  adapters: [bitcoinAdapter, wagmiAdapter],
+  adapters: [bitcoinAdapter, wagmiAdapter, solanaWeb3JsAdapter],
   projectId,
   networks: allNetworks,
   metadata,
@@ -47,7 +51,11 @@ export const modal = createAppKit({
     email: false,
   },
   siwx: new DefaultSIWX({
-    verifiers: [new EIP155Verifier(), new BIP122Verifier()],
+    verifiers: [
+      new EIP155Verifier(),
+      new BIP122Verifier(),
+      new SolanaVerifier(),
+    ],
   }),
 });
 
