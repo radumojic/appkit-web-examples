@@ -8,20 +8,22 @@ import { ActionButtonList } from "./components/ActionButtonList";
 import { initializeModal, initializeProvider, wagmiAdapter } from "./config";
 
 import "./App.css";
+import { AppKit } from "@reown/appkit";
 
 const queryClient = new QueryClient();
 
 export function App() {
   const [provider, setProvider] = useState<UniversalProvider>();
+  const [appkitModal, setAppkitModal] = useState<AppKit>();
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [session, setSession] = useState<any>();
   useEffect(() => {
     const init = async () => {
       const dataProvider = await initializeProvider();
       setProvider(dataProvider);
-      console.log("dataProvider", dataProvider);
-      initializeModal(dataProvider);
-
+      const modal = initializeModal(dataProvider);
+      setAppkitModal(modal);
       if (dataProvider.session) {
         // check if there is a session
         console.log("dataProvider.session", dataProvider.session);
@@ -33,16 +35,14 @@ export function App() {
 
   useEffect(() => {
     const handleDisplayUri = (uri: string) => {
-      const modal = initializeModal(provider);
-      modal?.open({ uri, view: "ConnectingWalletConnectBasic" });
+      appkitModal?.open({ uri, view: "Connect" });
     };
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleConnect = async (session: any) => {
       console.log("session", session);
       setSession(session.session);
-      const modal = initializeModal(provider);
-      await modal?.close();
+      await appkitModal?.close();
     };
 
     provider?.on("display_uri", handleDisplayUri);
@@ -52,7 +52,7 @@ export function App() {
       provider?.removeListener("connect", handleConnect);
       provider?.removeListener("display_uri", handleDisplayUri);
     };
-  }, [provider]);
+  }, [provider, appkitModal]);
 
   return (
     <div className={"pages"}>
@@ -67,6 +67,7 @@ export function App() {
           <ActionButtonList
             setSession={setSession}
             session={session}
+            appkitModal={appkitModal}
             provider={provider}
           />
           <div className="advice">

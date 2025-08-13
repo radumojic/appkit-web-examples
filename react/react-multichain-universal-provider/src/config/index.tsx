@@ -6,7 +6,7 @@ import { WagmiAdapter } from "@reown/appkit-adapter-wagmi";
 import { SolanaAdapter } from "@reown/appkit-adapter-solana/react";
 
 let provider: UniversalProvider | undefined;
-let modal: AppKit | undefined;
+export let modal: AppKit | undefined;
 
 //Set up the Wagmi Adapter (Config)
 export const wagmiAdapter = new WagmiAdapter({
@@ -39,6 +39,12 @@ export function initializeModal(universalProvider?: any) {
       adapters: [wagmiAdapter, solanaWeb3JsAdapter],
       universalProvider,
       manualWCControl: false,
+      showWallets: true,
+      enableNetworkSwitch: true,
+      enableEIP6963: true, // Disable 6963 by default
+      enableInjected: true, // Disable injected by default
+      enableCoinbase: true, // Default to true
+      enableWalletConnect: true, // Default to true,
       features: {
         analytics: false, // Optional - defaults to your Cloud configuration
       },

@@ -47,20 +47,20 @@ export const optionalNamespaces = {
     ],
     events: ["chainChanged", "accountsChanged"],
   },
-  // solana: {
-  //   methods: [
-  //     "solana_signTransaction",
-  //     "solana_signMessage",
-  //     "solana_signAndSendTransaction",
-  //     "solana_signAllTransactions",
-  //   ],
-  //   chains: [
-  //     "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
-  //     "solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1",
-  //     "solana:4uhcVJyU9pJkvQyS88uRDiswHXSCkY3z",
-  //   ],
-  //   events: [],
-  // },
+  solana: {
+    methods: [
+      "solana_signTransaction",
+      "solana_signMessage",
+      "solana_signAndSendTransaction",
+      "solana_signAllTransactions",
+    ],
+    chains: [
+      "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+      "solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1",
+      "solana:4uhcVJyU9pJkvQyS88uRDiswHXSCkY3z",
+    ],
+    events: [],
+  },
   mvx: {
     methods: [
       "mvx_signTransaction",
