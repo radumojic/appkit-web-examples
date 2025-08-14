@@ -1,12 +1,12 @@
-import UniversalProvider from "@walletconnect/universal-provider";
-import { useAppKitAccount } from "@reown/appkit/react";
-
-import { optionalNamespaces } from "../config/projectConfig";
-
 import { ChainNamespace } from "@reown/appkit/networks";
 import { AppKit } from "@reown/appkit";
+import { useAppKitAccount } from "@reown/appkit/react";
+import UniversalProvider from "@walletconnect/universal-provider";
+import { Buffer } from "buffer";
 import { type Address as EvmAddress } from "viem";
 import { useSignMessage } from "wagmi";
+
+import { optionalNamespaces } from "../config/projectConfig";
 import { DEFAULT_SUI_METHODS } from "../config/suiConfig";
 interface ActionButtonListProps {
   provider: UniversalProvider | undefined;
@@ -123,15 +123,13 @@ export const ActionButtonList = ({
       return;
     }
 
-    // go to sui on walletconnect?
+    // on walletconnect use ui - devnet for now
     const message = "Hello Reown AppKit with SUI!"; // message to sign
     try {
       const address = session?.namespaces?.sui?.accounts.find(
         (account: string) => account.includes("sui:devnet")
       );
       if (address) {
-        const cleanAddress = address.split(":")[2];
-        console.log("---address", cleanAddress);
         const method = DEFAULT_SUI_METHODS.SUI_SIGN_PERSONAL_MESSAGE;
         const req = {
           address: address,
