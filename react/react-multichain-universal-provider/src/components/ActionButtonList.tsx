@@ -99,12 +99,50 @@ export const ActionButtonList = ({
   };
 
   const handleSignMessage = async () => {
+    if (session?.namespaces?.sui) {
+      // on walletconnect use ui - devnet for now
+      const message = "Hello Reown AppKit with SUI!"; // message to sign
+      try {
+        const address = session?.namespaces?.sui?.accounts.find(
+          (account: string) => account.includes("sui:devnet")
+        );
+        if (address) {
+          const method = DEFAULT_SUI_METHODS.SUI_SIGN_PERSONAL_MESSAGE;
+          const req = {
+            address: address,
+            message: message,
+          };
+          const result = await provider!.request<{
+            signature: string;
+            publicKey: string;
+          }>(
+            {
+              method,
+              params: req,
+            },
+            "sui:devnet"
+          );
+          alert(`Message Signature: ${result.signature}`);
+        }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (error: any) {
+        console.error("❌ Message signing error:", error);
+
+        // Check for specific error types
+        const errorMessage = error.message || error.toString();
+        console.log("error", errorMessage);
+      }
+      return;
+    }
+
     if (appkitModal?.getIsConnectedState()) {
       const activeNamespace = appkitModal?.getActiveChainNamespace();
       if (activeNamespace === "solana") {
         const solanaProvider = appkitModal?.getProvider("solana");
         if (!solanaProvider || !address) throw Error("user is disconnected");
-        const encodedMessage = new TextEncoder().encode("Hello Reown AppKit!");
+        const encodedMessage = new TextEncoder().encode(
+          "Hello Reown AppKit Solana!"
+        );
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const sig = await (solanaProvider as any).signMessage(encodedMessage);
         const signatureHex = Buffer.from(sig).toString("hex");
@@ -112,7 +150,7 @@ export const ActionButtonList = ({
         return;
       }
       if (activeNamespace === "eip155") {
-        const msg = "Hello Reown AppKit!"; // message to sign
+        const msg = "Hello Reown AppKit EVM!"; // message to sign
         const sig = await signMessageAsync({
           message: msg,
           account: address as EvmAddress,
@@ -121,39 +159,6 @@ export const ActionButtonList = ({
         return;
       }
       return;
-    }
-
-    // on walletconnect use ui - devnet for now
-    const message = "Hello Reown AppKit with SUI!"; // message to sign
-    try {
-      const address = session?.namespaces?.sui?.accounts.find(
-        (account: string) => account.includes("sui:devnet")
-      );
-      if (address) {
-        const method = DEFAULT_SUI_METHODS.SUI_SIGN_PERSONAL_MESSAGE;
-        const req = {
-          address: address,
-          message: message,
-        };
-        const result = await provider!.request<{
-          signature: string;
-          publicKey: string;
-        }>(
-          {
-            method,
-            params: req,
-          },
-          "sui:devnet"
-        );
-        alert(`Message Signature: ${result.signature}`);
-      }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      console.error("❌ Message signing error:", error);
-
-      // Check for specific error types
-      const errorMessage = error.message || error.toString();
-      console.log("error", errorMessage);
     }
   };
 
