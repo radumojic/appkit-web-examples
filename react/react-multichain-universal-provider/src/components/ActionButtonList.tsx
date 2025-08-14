@@ -159,11 +159,11 @@ export const ActionButtonList = ({
 
   return (
     <div>
-      <button onClick={handleSignMessage}>Sign</button>
       {appkitModal?.getAccount()?.isConnected ||
       session ||
       appkitModal?.getIsConnectedState() ? (
         <>
+          <button onClick={handleSignMessage}>Sign</button>
           <button onClick={handleDisconnect}>Disconnect</button>
           <DisplayAppkitAddresses namespace="eip155" />
           <DisplayAppkitAddresses namespace="solana" />
@@ -176,7 +176,7 @@ export const ActionButtonList = ({
           <br />
         </>
       ) : (
-        <button onClick={handleConnect}>Open</button>
+        <button onClick={handleConnect}>Connect</button>
       )}
     </div>
   );

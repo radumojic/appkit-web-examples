@@ -57,7 +57,6 @@ export const optionalNamespaces = {
     chains: [
       "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
       "solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1",
-      "solana:4uhcVJyU9pJkvQyS88uRDiswHXSCkY3z",
     ],
     events: [],
   },
@@ -69,7 +68,7 @@ export const optionalNamespaces = {
       "mvx_signLoginToken",
       "mvx_cancelAction",
     ],
-    chains: ["mvx:1", "mvx:D", "mvx:T"],
+    chains: ["mvx:1", "mvx:D"],
     events: [],
   },
   sui: {
