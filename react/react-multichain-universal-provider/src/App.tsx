@@ -61,7 +61,7 @@ export function App() {
         alt="Reown"
         style={{ width: "150px", height: "150px" }}
       />
-      <h1>AppKit Wagmi+solana React dApp Example</h1>
+      <h1>AppKit Wagmi+Solana + Universal Provider Sui React dApp Example</h1>
       <WagmiProvider config={wagmiAdapter.wagmiConfig}>
         <QueryClientProvider client={queryClient}>
           <ActionButtonList
